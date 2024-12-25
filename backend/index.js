@@ -6,17 +6,26 @@ const cors = require("cors");
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcryptjs");
 const cookieParser = require("cookie-parser");
+const path = require('path');
+
 
 const app = express();
 const server = http.createServer(app);
 const io = new Server(server, {
   cors: {
-    origin: "http://localhost:3001", // Replace with your frontend's URL
-    methods: ["GET", "POST"],
+    origin: '*', // Adjust as needed
+    methods: ['GET', 'POST'],
     credentials: true,
   },
 });
-const PORT = 3000;
+
+// Serve static files from the React app's build directory
+app.use(express.static(path.join(__dirname, '../frontend/build')));
+
+// Serve the React app for all other routes
+app.get('*', (req, res) => {
+  res.sendFile(path.join(__dirname, '../frontend/build', 'index.html'));
+});
 const SECRET_KEY = "supersecretkey";
 
 // Middleware
@@ -70,16 +79,16 @@ app.post("/api/messages", (req, res) => {
 });
 
 // WebSocket Connection
-io.on("connection", (socket) => {
-  console.log("A user connected");
+io.on('connection', (socket) => {
+  console.log('A user connected');
 
-  socket.on("disconnect", () => {
-    console.log("A user disconnected");
+  socket.on('disconnect', () => {
+    console.log('A user disconnected');
   });
 });
 
+
 // Serve React frontend
-const path = require("path");
 app.use(express.static(path.join(__dirname, "../frontend/build")));
 
 // Handle any other requests by serving React's index.html
@@ -88,4 +97,7 @@ app.get("*", (req, res) => {
 });
 
 // Start Server
-server.listen(PORT, () => console.log(`Backend running on http://localhost:${PORT}`));
+const PORT = process.env.PORT || 3000;
+server.listen(PORT, () => {
+  console.log(`Server is running on port ${PORT}`);
+});
