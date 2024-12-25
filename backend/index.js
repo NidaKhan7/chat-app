@@ -32,7 +32,8 @@ const SECRET_KEY = "supersecretkey";
 app.use(
   cors({
     origin: "https://chat-app-nida.onrender.com", // Replace with your frontend's URL
-    credentials: true,
+    methods: ['GET', 'POST'],
+    credentials: true
   })
 );
 app.use(bodyParser.json());
