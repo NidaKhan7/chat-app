@@ -3,7 +3,7 @@ import { io } from 'socket.io-client';
 // Retrieve token from localStorage
 const token = localStorage.getItem('token');
 
-const socket = io('http://localhost:3000', {
+const socket = io('http://localhost:5000', {
   auth: {
     token: token,
   },

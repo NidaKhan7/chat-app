@@ -31,7 +31,7 @@ const SECRET_KEY = "supersecretkey";
 // Middleware
 app.use(
   cors({
-    origin: "http://localhost:3001", // Replace with your frontend's URL
+    origin: "https://chat-app-nida.onrender.com", // Replace with your frontend's URL
     credentials: true,
   })
 );
@@ -97,7 +97,7 @@ app.get("*", (req, res) => {
 });
 
 // Start Server
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 5000;
 server.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
 });
