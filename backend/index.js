@@ -7,22 +7,21 @@ const jwt = require("jsonwebtoken");
 const bcrypt = require("bcryptjs");
 const cookieParser = require("cookie-parser");
 const path = require('path');
-const WebSocket = require('ws');
 
 const port = process.env.PORT || 5000; // Define the port number
 const app = express();
 const server = http.createServer(app);
+
+// Initialize WebSocket server with Socket.io
 const io = new Server(server, {
   cors: {
-    origin: 'http://localhost:3000', // Adjust as needed
+    origin: 'https://chat-app-nida.onrender.com', // Adjust with your frontend URL
     methods: ['GET', 'POST'],
     credentials: true,
   },
 });
 
-const wss = new WebSocket.Server({ server });
-
-// Serve static files from the React app's build directory
+// Serve static files from React app
 app.use(express.static(path.join(__dirname, '../frontend/build')));
 
 // Serve the React app for all other routes
@@ -35,7 +34,7 @@ const SECRET_KEY = "supersecretkey";
 // Middleware
 app.use(
   cors({
-    origin: "https://chat-app-nida.onrender.com", // Replace with your frontend's URL
+    origin: "https://chat-app-nida.onrender.com",
     credentials: true
   })
 );
@@ -89,11 +88,10 @@ io.on('connection', (socket) => {
   socket.on('disconnect', () => {
     console.log('A user disconnected');
   });
-});
 
-// Handle any other requests by serving React's index.html
-app.get("*", (req, res) => {
-  res.sendFile(path.join(__dirname, "../frontend/build/index.html"));
+  socket.on('error', (error) => {
+    console.error('WebSocket error:', error);
+  });
 });
 
 // Start Server
