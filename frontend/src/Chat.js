@@ -62,16 +62,21 @@ const socket = io('https://chat-app-nida.onrender.com', {
   transports: ['websocket', 'polling'],
 });
 
-
 const Chat = ({ username }) => {
   const [message, setMessage] = useState('');
   const [messages, setMessages] = useState([]);
 
   useEffect(() => {
     // Fetch initial messages
-    fetch('http://localhost:5000/api/messages')
-      .then((response) => response.json())
-      .then((data) => setMessages(data));
+    fetch('https://chat-app-nida.onrender.com/api/messages')
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error('Failed to fetch messages');
+        }
+        return response.json();
+      })
+      .then((data) => setMessages(data))
+      .catch((error) => console.error('Error fetching messages:', error));
 
     // Listen for incoming messages
     socket.on('receiveMessage', (newMessage) => {
@@ -112,3 +117,4 @@ const Chat = ({ username }) => {
 };
 
 export default Chat;
+
