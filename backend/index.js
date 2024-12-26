@@ -8,19 +8,8 @@ const bcrypt = require("bcryptjs");
 const cookieParser = require("cookie-parser");
 const path = require('path');
 const WebSocket = require('ws');
-const wss = new WebSocket.Server({ server });
 
-wss.on('connection', ws => {
-  ws.on('message', message => {
-    wss.clients.forEach(client => {
-      if (client.readyState === WebSocket.OPEN) {
-        client.send(message);
-      }
-    });
-  });
-});
-
-
+const port = process.env.PORT || 5000; // Define the port number
 const app = express();
 const server = http.createServer(app);
 const io = new Server(server, {
@@ -31,6 +20,8 @@ const io = new Server(server, {
   },
 });
 
+const wss = new WebSocket.Server({ server });
+
 // Serve static files from the React app's build directory
 app.use(express.static(path.join(__dirname, '../frontend/build')));
 
@@ -38,6 +29,7 @@ app.use(express.static(path.join(__dirname, '../frontend/build')));
 app.get('*', (req, res) => {
   res.sendFile(path.join(__dirname, '../frontend/build', 'index.html'));
 });
+
 const SECRET_KEY = "supersecretkey";
 
 // Middleware
@@ -99,19 +91,12 @@ io.on('connection', (socket) => {
   });
 });
 
-
-
-// Serve React frontend
-app.use(express.static(path.join(__dirname, "../frontend/build")));
-
 // Handle any other requests by serving React's index.html
 app.get("*", (req, res) => {
   res.sendFile(path.join(__dirname, "../frontend/build/index.html"));
 });
 
 // Start Server
-const PORT = process.env.PORT || 5000;
-server.listen(PORT, () => {
-  console.log(`Server is running on port ${PORT}`);
+server.listen(port, () => {
+  console.log(`Server is running on port ${port}`);
 });
-
