@@ -58,9 +58,9 @@
 import React, { useState, useEffect } from 'react';
 import io from 'socket.io-client';
 
-const socket = io('https://chat-app-nida.onrender.com', {
+const socket = io('wss://chat-app-nida.onrender.com', {
   transports: ['websocket', 'polling'],
-});
+  });
 
 const Chat = ({ username }) => {
   const [message, setMessage] = useState('');
