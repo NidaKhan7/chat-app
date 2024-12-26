@@ -88,10 +88,13 @@ io.on('connection', (socket) => {
   socket.on('disconnect', () => {
     console.log('A user disconnected');
   });
-
+ socket.on('sendMessage', (message) => {
+    io.emit('receiveMessage', message); // Broadcast to all clients
+  });
   socket.on('error', (error) => {
     console.error('WebSocket error:', error);
   });
+
 });
 
 // Start Server
