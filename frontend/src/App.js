@@ -5,10 +5,14 @@ function App() {
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
     const [loggedIn, setLoggedIn] = useState(false);
+    const [loading, setLoading] = useState(false);
+
+    const API_URL = "http://localhost:5000";
 
     const register = async () => {
+        setLoading(true);
         try {
-            const response = await fetch("http://localhost:3000/api/register", {
+            const response = await fetch(`${API_URL}/api/register`, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ username, password }),
@@ -16,30 +20,38 @@ function App() {
             if (response.ok) {
                 alert("Registration successful!");
             } else {
-                alert("Registration failed!");
+                const error = await response.json();
+                alert(error.message || "Registration failed!");
             }
         } catch (err) {
             console.error(err);
+            alert("An error occurred. Please try again.");
+        } finally {
+            setLoading(false);
         }
     };
 
     const login = async () => {
+        setLoading(true);
         try {
-            const response = await fetch("http://localhost:3000/api/login", {
+            const response = await fetch(`${API_URL}/api/login`, {
                 method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                    "Authorization": `Bearer ${localStorage.getItem('token')}`,
-                },
+                headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ username, password }),
             });
             if (response.ok) {
+                const data = await response.json();
+                localStorage.setItem("token", data.token);
                 setLoggedIn(true);
             } else {
-                alert("Login failed!");
+                const error = await response.json();
+                alert(error.message || "Login failed!");
             }
         } catch (err) {
             console.error(err);
+            alert("An error occurred. Please try again.");
+        } finally {
+            setLoading(false);
         }
     };
 
@@ -59,8 +71,8 @@ function App() {
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
                 />
-                <button onClick={register}>Register</button>
-                <button onClick={login}>Login</button>
+                <button onClick={register} disabled={loading}>Register</button>
+                <button onClick={login} disabled={loading}>Login</button>
             </div>
         );
     }

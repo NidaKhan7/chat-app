@@ -13,7 +13,7 @@ const app = express();
 const server = http.createServer(app);
 const io = new Server(server, {
   cors: {
-    origin: '*', // Adjust as needed
+    origin: 'http://localhost:3000', // Adjust as needed
     methods: ['GET', 'POST'],
     credentials: true,
   },
@@ -32,7 +32,6 @@ const SECRET_KEY = "supersecretkey";
 app.use(
   cors({
     origin: "https://chat-app-nida.onrender.com", // Replace with your frontend's URL
-    methods: ['GET', 'POST'],
     credentials: true
   })
 );
@@ -89,6 +88,7 @@ io.on('connection', (socket) => {
 });
 
 
+
 // Serve React frontend
 app.use(express.static(path.join(__dirname, "../frontend/build")));
 
@@ -102,3 +102,4 @@ const PORT = process.env.PORT || 5000;
 server.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
 });
+
