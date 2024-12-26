@@ -12,11 +12,11 @@ function App() {
     const register = async () => {
         setLoading(true);
         try {
-            const response = await fetch(`${API_URL}/api/register`, {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
+            fetch('http://localhost:5000/api/register', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ username, password }),
-            });
+              });
             if (response.ok) {
                 alert("Registration successful!");
             } else {
