@@ -7,7 +7,7 @@ function App() {
     const [loggedIn, setLoggedIn] = useState(false);
     const [loading, setLoading] = useState(false);
 
-    const API_URL = "http://localhost:5000";
+    const API_URL = process.env.REACT_APP_API_URL || 'https://chat-app-nida.onrender.com/api';
 
     const register = async () => {
         setLoading(true);
